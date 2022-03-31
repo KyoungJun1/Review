@@ -22,13 +22,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 
-	<select id="boardList" parameterType="PagingVO" resultMap="boardBox">
+	<select id="boardList"  resultMap="boardBox">
 
 		select * from (select
 		a.bo_num,a.mem_id,a.bo_title,a.bo_content,b.count as BO_LIKEPOINT
 		,a.bo_seepoint,a.bo_pic,a.bo_date from board a left join (select
 		bo_num,count(mem_id) count from likecheck group by bo_num) b on
-		a.bo_num=b.bo_num order by a.bo_num) where rownum between #{start} and #{end}
+		a.bo_num=b.bo_num order by a.bo_num) 
 
 
 	</select>

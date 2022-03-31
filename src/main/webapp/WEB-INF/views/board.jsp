@@ -30,12 +30,12 @@
 	<!-- Header-->
 	<header class="bg-dark py-5">
 		<div class="container px-4 px-lg-5 my-5">
-		
+
 			<div class="text-center text-white">
 				<h1 class="display-4 fw-bolder">게시판</h1>
-					<input class="btn btn-primary btn-xl" id="submitButton"
-							type="button" onclick="location.href='main'" value="메인으로">
-				
+				<input class="btn btn-primary btn-xl" id="submitButton"
+					type="button" onclick="location.href='main'" value="메인으로">
+
 				<p class="lead fw-normal text-white-50 mb-0"></p>
 				<br>
 
@@ -87,7 +87,51 @@
 
 								</c:forEach>
 
+								<br>
+								<div id="pagingArea">
+									<input class="btn btn-primary btn-xl" id="submitButton"
+										type="button"
+										onclick="location.href='boardAddPage?num=${num}'" value="추가">
+									<br>
+									<ul class="pagination">
+										<c:choose>
+											<c:when test="${ pi.currentPage ne 1 }">
+												<li class="page-item"><a class="page-link"
+													href="boardPage?num=${ pi.currentPage-1 }">Previous</a></li>
+											</c:when>
+											<c:otherwise>
+												<li class="page-item disabled"><a class="page-link"
+													href="">Previous</a></li>
+											</c:otherwise>
+										</c:choose>
 
+										<c:forEach begin="${ pi.startPage }" end="${ pi.endPage }"
+											var="p">
+											<c:choose>
+												<c:when test="${ pi.currentPage ne p }">
+													<li class="page-item"><a class="page-link"
+														href="boardPage?num=${ p }">${ p }</a></li>
+												</c:when>
+												<c:otherwise>
+													<li class="page-item disabled"><a class="page-link"
+														href="">${ p }</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+
+
+										<c:choose>
+											<c:when test="${ pi.currentPage ne pi.maxPage }">
+												<li class="page-item"><a class="page-link"
+													href="boardPage?num=${ pi.currentPage+1 }">Next</a></li>
+											</c:when>
+											<c:otherwise>
+												<li class="page-item disabled"><a class="page-link"
+													href="boardPage?num=${ pi.currentPage+1 }">Next</a></li>
+											</c:otherwise>
+										</c:choose>
+									</ul>
+								</div>
 
 
 
@@ -95,65 +139,31 @@
 						</li>
 
 						<!-- 게시판 페이징 영역 -->
-						<li>
-							<div id="divPaging">
-								<div onclick="location.href='boardPage?num=${page[0] -1}'">>◀</div>
-								<c:forEach var="i" begin="${page[0] }" end="${page[1] }">
-
-									<c:choose>
-										<c:when test="${num == i }">
-
-											<div>
-												<b>${i }</b>
-											</div>
-
-										</c:when>
-
-										<c:otherwise>
-											<div onclick="location.href='boardPage?num=${i}'">${i }</div>
-										</c:otherwise>
-
-									</c:choose>
+						<li></li>
 
 
 
-								</c:forEach>
-
-								<div onclick="location.href='boardPage?num=${page[1] +1}'">>▶</div>
-
-							</div>
-						</li>
-
-						<input class="btn btn-primary btn-xl" id="submitButton"
-							type="button" onclick="location.href='boardAddPage?num=${num}'" value="추가">
 
 
-						<!-- 검색 폼 영역 -->
-						<li id='liSearchOption'>
-							<div>
-								<select id='selSearchOption'>
-									<option value='A'>제목+내용</option>
-									<option value='T'>제목</option>
-									<option value='C'>내용</option>
-								</select> <input id='txtKeyWord' /> <input type='button' value='검색' />
-							</div>
-
-						</li>
 
 					</ul>
+
+
 				</div>
+
 			</div>
+
 		</div>
 	</section>
 
-		<c:choose>
-			<c:when test="${check=='no' }">
-				<script>
-					alert("로그인 후 사용");
-				</script>
-			</c:when>
-		
-		</c:choose>
+	<c:choose>
+		<c:when test="${check=='no' }">
+			<script>
+				alert("로그인 후 사용");
+			</script>
+		</c:when>
+
+	</c:choose>
 
 
 	<!-- Bootstrap core JS-->

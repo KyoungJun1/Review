@@ -11,7 +11,6 @@
 		<typeAlias type="com.kkj.myapp.Member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kkj.myapp.Library.model.vo.Library" alias="Library"/>
 		<typeAlias type="com.kkj.myapp.Board.model.vo.Board" alias="Board"/>
-		<typeAlias type="com.kkj.myapp.Board.model.vo.PagingVO" alias="PagingVO"/>
 
 	</typeAliases>
 

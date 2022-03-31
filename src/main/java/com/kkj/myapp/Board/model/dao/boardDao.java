@@ -2,18 +2,23 @@ package com.kkj.myapp.Board.model.dao;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kkj.myapp.Board.model.vo.Board;
-import com.kkj.myapp.Board.model.vo.PagingVO;
+import com.kkj.myapp.Board.model.vo.PageInfo;
 import com.kkj.myapp.Member.model.vo.Member;
 
 @Repository
 public class boardDao {
 
-	public ArrayList<Board> boardList(PagingVO pv, SqlSessionTemplate sqlsession) {
-		return (ArrayList) sqlsession.selectList("boardMapper.boardList", pv);
+	public ArrayList<Board> boardList(PageInfo pi, SqlSessionTemplate sqlsession) {
+
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		return (ArrayList) sqlsession.selectList("boardMapper.boardList", null, rowBounds);
 	}
 
 	public void boardAdd(Board b, SqlSessionTemplate sqlsession) {

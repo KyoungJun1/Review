@@ -14,7 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kkj.myapp.Board.model.service.boardService;
 import com.kkj.myapp.Board.model.vo.Board;
-import com.kkj.myapp.Board.model.vo.PagingVO;
+import com.kkj.myapp.Board.model.vo.PageInfo;
+import com.kkj.myapp.Board.model.vo.Pagination;
 import com.kkj.myapp.Member.model.vo.Member;
 
 @Controller
@@ -26,70 +27,16 @@ public class boardController {
 	// 도서 메인 페이지 리스트 조회
 	@RequestMapping("boardPage")
 	public String boardPage(HttpSession session, Model model, int num, @RequestParam(required = false) String check) {
+
+		int listCount = bs.pageNum();
+		PageInfo pi = Pagination.getPageInfo(listCount, num, 10, 5);
+
+		ArrayList<Board> list = bs.boardList(pi);
 		
-		if(check == null) {
-		
-			//
-			
-		}else {
-			model.addAttribute("check", check);
-		}
-		
-		System.out.println("asdasdkewfjkfsd : " + num);
-		
-		int totalNum = bs.pageNum();
+		System.out.println(list);
 
-		// 10개씩 페이징
-		int pageCount = 10;
-
-		// 페이징 표시용
-		int[] pageBtnEnd = new int[2];
-
-		// 마지막 페이징 계산용
-		int totalEnd = ((totalNum / pageCount) * pageCount) + 1;
-
-		// 페이징 계산용
-		// 마지막 페이징
-		if (num == totalEnd) {
-
-			pageBtnEnd[0] = totalEnd;
-
-			pageBtnEnd[1] = totalNum;
-
-			// 기본 페이징
-		} else {
-			System.out.println("lies");
-			pageBtnEnd[1] = (int) (Math.ceil((num +10) / 10) * 10);
-
-			pageBtnEnd[0] = pageBtnEnd[1] - 9;
-
-		}
-		System.out.println(pageBtnEnd[0] );
-
-		System.out.println(pageBtnEnd[1] );
-
-		// 게시글 조회 시작 번호
-		int startNum = ((num - 1) / pageCount) * pageCount + 1;
-
-		// 게시글 조회 마지막 번호
-		int EndNum = startNum + pageCount - 1;
-
-		PagingVO pv = new PagingVO();
-		pv.setStart(startNum);
-		pv.setEnd(EndNum);
-		
-	
-
-		ArrayList<Board> b = bs.boardList(pv);
-
-		System.out.println(startNum + "fuck");
-		System.out.println(EndNum + "fuck");
-		
-		System.out.println(b + "fuck");
-
-		model.addAttribute("boardList", b);
-
-		model.addAttribute("page", pageBtnEnd);
+		model.addAttribute("boardList", list);
+		model.addAttribute("pi", pi);
 
 		model.addAttribute("num", num);
 
@@ -98,18 +45,18 @@ public class boardController {
 
 	// 게시판 추가 페이지 이동
 	@RequestMapping("boardAddPage")
-	public String boardAddPage(HttpSession session, Model model, int num , RedirectAttributes re) {
+	public String boardAddPage(HttpSession session, Model model, int num, RedirectAttributes re) {
 		Member m = (Member) session.getAttribute("member");
-		if(m ==null) {
-			re.addAttribute("check","no");
-			re.addAttribute("num",num);
+		if (m == null) {
+			re.addAttribute("check", "no");
+			re.addAttribute("num", num);
 			System.out.println("king");
 			return "redirect:boardPage";
-		}else {
+		} else {
 			return "boardAdd";
 
 		}
-		
+
 	}
 
 	// 게시판 삭제
@@ -124,7 +71,7 @@ public class boardController {
 
 	// 게시판 추가
 	@RequestMapping("boardAdd")
-	public String boardAdd(HttpSession session, Model model, String title, String content,RedirectAttributes re) {
+	public String boardAdd(HttpSession session, Model model, String title, String content, RedirectAttributes re) {
 
 		Member m = (Member) session.getAttribute("member");
 		String id = m.getId();
@@ -135,9 +82,9 @@ public class boardController {
 		b.setContent(content);
 
 		bs.boardAdd(b);
-		
-		re.addAttribute("num",1);
-		
+
+		re.addAttribute("num", 1);
+
 		return "redirect:boardPage";
 	}
 

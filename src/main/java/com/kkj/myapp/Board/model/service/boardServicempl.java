@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kkj.myapp.Board.model.dao.boardDao;
 import com.kkj.myapp.Board.model.vo.Board;
-import com.kkj.myapp.Board.model.vo.PagingVO;
+import com.kkj.myapp.Board.model.vo.PageInfo;
 import com.kkj.myapp.Member.model.vo.Member;
 
 @Service
@@ -21,8 +21,8 @@ public class boardServicempl implements boardService {
 	private boardDao bd;
 
 	@Override
-	public ArrayList<Board> boardList(PagingVO pv) {
-		return bd.boardList(pv,sqlsession);
+	public ArrayList<Board> boardList(PageInfo pi) {
+		return bd.boardList(pi,sqlsession);
 	}
 
 	@Override
