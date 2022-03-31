@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="boardMapper">
+
+
+	<resultMap type="Board" id="boardBox">
+		<id property="num" column="BO_NUM" />
+		<result property="id" column="MEM_ID" />
+		<result property="title" column="BO_TITLE" />
+		<result property="content" column="BO_CONTENT" />
+		<result property="likePoint" column="BO_LIKEPOINT" />
+		<result property="seePoint" column="BO_SEEPOINT" />
+		<result property="picture" column="BO_PIC" />
+		<result property="date" column="BO_DATE" />
+	</resultMap>
+
+	<select id="pageNum" resultType="_int">
+		select count(*) from board
+
+	</select>
+
+
+	<select id="boardList" parameterType="PagingVO" resultMap="boardBox">
+
+		select * from (select
+		a.bo_num,a.mem_id,a.bo_title,a.bo_content,b.count as BO_LIKEPOINT
+		,a.bo_seepoint,a.bo_pic,a.bo_date from board a left join (select
+		bo_num,count(mem_id) count from likecheck group by bo_num) b on
+		a.bo_num=b.bo_num order by a.bo_num) where rownum between #{start} and #{end}
+
+
+	</select>
+
+
+
+
+	<insert id="boardAdd" parameterType="Board">
+		INSERT INTO BOARD
+		VALUES(BOARD_SEQ.NEXTVAL, #{id}, #{title},#{content},0,0,null,sysdate)
+
+	</insert>
+
+	<select id="boardDetail" parameterType="_int"
+		resultMap="boardBox">
+		select
+		a.bo_num,a.mem_id,a.bo_title,a.bo_content,b.count as
+		BO_LIKEPOINT
+		,a.bo_seepoint,a.bo_pic,a.bo_date from board a left join
+		(select
+		bo_num,count(mem_id) count from likecheck group by bo_num) b on
+		a.bo_num=b.bo_num where a.bo_num=#{num}
+	</select>
+
+	<delete id="boardDel" parameterType="_int">
+		DELETE FROM BOARD WHERE
+		BO_NUM=#{num}
+
+	</delete>
+
+	<update id="boardSee" parameterType="_int">
+		UPDATE BOARD SET BO_SEEPOINT
+		=BO_SEEPOINT+1 WHERE BO_NUM=#{num}
+
+
+	</update>
+
+	<select id="boardLike" parameterType="Member"
+		resultType="String">
+		SELECT MEM_ID FROM
+		LIKECHECK WHERE MEM_ID=#{id} and
+		BO_NUM=#{phone}
+	</select>
+
+	<insert id="upLike" parameterType="Member">
+		INSERT INTO LIKECHECK
+		VALUES(LIKE_SEQ.NEXTVAL, #{phone}, #{id})
+
+	</insert>
+
+	<delete id="downLike" parameterType="Member">
+		DELETE FROM LIKECHECK WHERE
+		BO_NUM=#{phone} AND MEM_ID=#{id}
+
+
+	</delete>
+
+	<select id="likeFind" parameterType="Member" resultType="_int">
+		select
+		b.count as
+		BO_LIKEPOINT
+		from board a left join
+		(select
+		bo_num,count(mem_id) count from likecheck
+		group by bo_num) b on
+		a.bo_num=b.bo_num where a.bo_num=#{phone}
+
+	</select>
+
+</mapper>		

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="libraryMapper">
+
+
+	<resultMap id="libraryBox" type="Library">
+		<id property="num" column="LIB_NUM" />
+		<result property="geNum" column="LIB_GENUM" />
+		<result property="name" column="LIB_NAME" />
+		<result property="state" column="LIB_STATE" />
+		<result property="time" column="LIB_TIME" />
+		<result property="picture" column="LIB_PIC" />
+		<result property="date" column="LIB_DATE" />
+		<result property="id" column="MEM_ID" />
+
+
+	</resultMap>
+
+	<select id="bookAllList" resultMap="libraryBox">
+		SELECT * FROM LIBRARY
+	</select>
+
+	<select id="libraryselect" resultMap="libraryBox" parameterType="Library">
+		SELECT * FROM LIBRARY WHERE LIB_NAME=#{name}
+	</select>
+	<select id="detailsBook" parameterType="_int"
+		resultMap="libraryBox">
+		SELECT * FROM LIBRARY WHERE LIB_NUM=#{page}
+	</select>
+
+	<update id="reservationBook" parameterType="Member">
+		UPDATE LIBRARY SET
+		LIB_STATE='예약중', MEM_ID=#{id} WHERE LIB_NUM=#{phone}
+	</update>
+
+
+	<insert id="addBook" parameterType="Library">
+		INSERT INTO LIBRARY
+		VALUES(LIBRARY_SE.NEXTVAL,1,#{name},'대여가능',null,#{picture},sysdate,null)
+	</insert>
+
+	<select id="idCheck" parameterType="Library" resultType="String">
+		SELECT
+		MEM_ID FROM
+		MEMBER WHERE MEM_ID=#{id}
+
+	</select>
+
+	<update id="bookAA" parameterType="Library">
+		UPDATE LIBRARY SET
+		LIB_STATE='대여중', MEM_ID=#{id} WHERE LIB_NUM=#{num}
+	</update>
+
+	<update id="bookB" parameterType="_int">
+		UPDATE LIBRARY SET
+		LIB_STATE='대여가능', MEM_ID=null WHERE LIB_NUM=#{num}
+	</update>
+
+	<update id="bookC" parameterType="_int">
+		UPDATE LIBRARY SET
+		LIB_STATE='대여가능', MEM_ID=null WHERE LIB_NUM=#{num}
+	</update>
+
+	<select id="myBooks" resultMap="libraryBox">
+		SELECT * FROM LIBRARY WHERE
+		MEM_ID=#{id}
+	</select>
+
+</mapper>		

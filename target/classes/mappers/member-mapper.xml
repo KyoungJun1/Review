@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+
+
+	<resultMap id="memberBox" type="Member">
+		<id property="id" column="MEM_ID" />
+		<result property="pw" column="MEM_PW" />
+		<result property="name" column="MEM_NAME" />
+		<result property="email" column="MEM_MAIL" />
+		<result property="phone" column="MEM_PHONE" />
+		<result property="address" column="MEM_ADD" />
+	</resultMap>
+
+	<select id="overlap" parameterType="Member" resultType="String">
+		SELECT MEM_ID FROM MEMBER
+		WHERE MEM_ID=#{id}
+	</select>
+	
+	<select id="overlaptwo" parameterType="Member" resultType="String">
+		SELECT MEM_ID FROM MEMBER
+		WHERE MEM_MAIL=#{email}
+	</select>
+	
+	<insert id="createMember" parameterType="Member">
+		INSERT INTO MEMBER VALUES(#{id}, #{pw}, #{name},#{phone},#{email},#{address},99999,'N',SYSDATE,2)
+	
+	</insert>
+	
+	<update id="signUpConfirm" parameterType="Member">
+		UPDATE MEMBER SET MEM_STATE='Y' WHERE MEM_MAIL=#{email}
+	</update>
+
+	<select id="loginMember" parameterType="Member" resultMap="memberBox">
+		SELECT MEM_ID, MEM_PW, MEM_NAME, MEM_MAIL, MEM_PHONE, MEM_ADD FROM MEMBER WHERE MEM_STATE='Y' AND MEM_ID=#{id} and MEM_PW=#{pw}
+	</select>
+
+	<update id="reMember" parameterType="Member">
+		UPDATE MEMBER SET MEM_PW=#{pw} , MEM_PHONE=#{phone} , MEM_ADD=#{address} WHERE MEM_ID=#{id}
+	</update>
+
+
+</mapper>		
